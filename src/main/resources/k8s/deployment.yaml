@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  minReadySeconds: 40
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 2
+  selector:
+    matchLabels:
+      app: us
+  template:
+    metadata:
+      labels:
+        app: us
+        tech: spring-boot
+    spec:
+      containers:
+        -
+          image: yokeshvsk/user-service
+          imagePullPolicy: Always
+          name: us
+          ports:
+            -
+              containerPort: 8000
+              name: serviceport
+            -
+              containerPort: 8001
+              name: manageport
+          resources:
+            limits:
+              memory: 2G
+              cpu: "1"
+            requests:
+              cpu: "1"
+              memory: 2G
+          readinessProbe:
+            periodSeconds: 30
+            httpGet:
+              path: /user-service/actuator/health
+              port: 8001

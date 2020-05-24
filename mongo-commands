@@ -1,0 +1,32 @@
+#run mongo
+mongo
+
+#use admin to create db user - make sure to mention the auth server
+#user creation depends on which db we use. so select the db first
+use authdb
+db.createUser(
+    {
+        user: "root",
+        pwd: "root",
+        roles:["root"]
+    }
+);
+
+
+use authdb
+db.createUser(
+    {
+        user: "yo",
+        pwd: "yoki12345",
+        roles:[
+            {
+                role: "readWrite",
+                db: "authdb"
+            }
+        ]
+    }
+);
+
+
+#connect with that user
+mongo -u yo -p yoki12345 --authenticationDatabase authdb

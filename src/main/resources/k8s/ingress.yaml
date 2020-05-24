@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  name: csingress
+spec:
+  tls:
+    - hosts:
+        - services.config.com
+  rules:
+    - host: services.config.com
+      http:
+        paths:
+          - path: /config-service
+            backend:
+              serviceName: config-service
+              servicePort: 80
+          #actuator proxies
+          - path: /config-service/actuator
+            backend:
+              serviceName: config-service
+              servicePort: 8081
